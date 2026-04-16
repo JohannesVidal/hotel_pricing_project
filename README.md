@@ -1,239 +1,228 @@
-# 🏨 Hotel Data Pipeline for Market Analysis
+# Airbnb Pricing & Tourism Density Analysis (Paris)
 
-## 📌 Overview
+## Overview
 
-This project is part of a broader data analysis focused on **Airbnb and hotel market behavior**.
+This project analyzes how **location and tourism intensity influence Airbnb pricing and guest satisfaction in Paris**.
 
-The main objective is to support business-driven questions such as:
+The analysis combines:
+- Airbnb listing data
+- Hotel data (RapidAPI)
+- External geospatial data from the **Geoapify Places API**
 
-- Does the day of the week affect cleanliness ratings and guest satisfaction on Airbnb?
-- Does being a superhost impact pricing and guest satisfaction?
-- How does location influence pricing and ratings across Airbnb and hotels?
+The goal is to move beyond simple location assumptions and evaluate whether:
+- proximity to landmarks matters
+- broader **tourism density** provides a stronger signal for pricing
 
-To support this analysis, this repository builds a **data pipeline that extracts and prepares hotel data**, which will later be combined with external datasets.
-
-This pipeline acts as a **data enrichment layer**, enabling:
-
-- Geographic analysis (e.g., heatmaps of listing distribution)
-- Cross-platform comparisons (Airbnb vs hotels)
-- Integration with external signals (events, weather)
+The full analysis is developed in a Jupyter Notebook, where data is extracted, enriched, and analyzed step by step.
 
 ---
 
-## ❓ Business Questions
+## Business Focus
 
-This project contributes to answering the following hypotheses:
+The project is built around two core questions:
 
-### 1. Weekday vs Weekend Impact
-**Question:**  
-Does the day of the week affect cleanliness ratings and overall guest satisfaction on Airbnb?
+### 1. What drives guest satisfaction?
+- Does location (proximity to landmarks) matter?
+- Or do internal factors such as cleanliness dominate?
 
-**Hypothesis:**  
-Listings will have lower cleanliness ratings and guest satisfaction scores on weekends due to higher turnover and reduced cleaning time.
-
----
-
-### 2. Superhost Effect
-**Question:**  
-Does being a superhost impact pricing and guest satisfaction?
-
-**Hypothesis:**  
-Superhost listings will show:
-- Higher guest satisfaction scores
-- Better cleanliness ratings
-- Higher average price per night
+### 2. What drives pricing?
+- Does tourism density influence Airbnb prices?
+- Do highly touristic areas command a price premium?
 
 ---
 
-### 3. Location & Market Structure
-**Question:**  
-Are hotel and Airbnb listings concentrated in specific neighbourhoods, and does location affect pricing or ratings?
+## Key Insight
 
-**Hypothesis:**  
-Listings closer to city centres and major attractions will have higher prices, but not necessarily higher satisfaction scores.
+- **Location (landmark proximity)** -> very weak relationship with satisfaction
+- **Cleanliness** -> strong driver of satisfaction
+- **Tourism density** -> moderate but consistent relationship with pricing
+
+This leads to a clear distinction:
+
+> Quality drives experience, while location drives price.
 
 ---
 
-## ⚙️ Tech Stack
+## Tech Stack
 
-- **Python** (Pandas, Requests)
-- **APIs**
+- Python (Pandas, NumPy, Matplotlib)
+- APIs:
   - Google Hotel Data (RapidAPI)
-  - Ticketmaster (optional)
-  - OpenWeather (optional)
-- **Jupyter Notebook**
-- **Git & GitHub**
+  - Geoapify Places API
+- Jupyter Notebook
+- Git & GitHub
 
 ---
 
-## 🧠 Project Structure
+## Project Structure
 
-```text
-hotel_pricing_project/
-│
-├── data/
-│   ├── raw/
-│   └── processed/
-│
-├── notebooks/
-│   └── 01_hotel_data_extraction.ipynb
-│
-├── src/
-│   ├── config.py
-│   ├── ticketmaster_api.py
-│   └── weather_api.py
-│
-├── .gitignore
-├── requirements.txt
-└── README.md
-```
-
----
-
-## 🔄 Data Pipeline
-
-The workflow implemented in this project follows these steps:
-
-### 1. City Extraction
-- Query API to retrieve city metadata
-- Extract IATA city codes (e.g., `PAR`, `ROM`)
-
-### 2. Hotel Retrieval
-- Fetch hotel data per city using city codes
-
-### 3. Data Normalization
-- Convert JSON responses into tabular format (DataFrames)
-
-### 4. Data Merging
-- Combine datasets from multiple cities
-
-### 5. Data Cleaning
-- Rename columns (`snake_case`)
-- Fix data types (numeric, datetime, boolean)
-- Standardize text fields
-- Remove duplicates
-
-### 6. Data Validation
-- Check missing values
-- Ensure uniqueness of hotel IDs
-
-### 7. Data Storage
-- Save raw and processed datasets
+    hotel_pricing_project/
+    │
+    ├── data/
+    │   ├── raw/
+    │   └── processed/
+    │
+    ├── notebooks/
+    │   └── 01_hotel_data_extraction.ipynb
+    │
+    ├── src/
+    │   ├── config.py
+    │   ├── geoapify_api.py
+    │   ├── ticketmaster_api.py
+    │   └── weather_api.py
+    │
+    ├── .gitignore
+    ├── requirements.txt
+    └── README.md
 
 ---
 
-## 📊 Outputs
+## Data Pipeline
 
-### Raw dataset
-`data/raw/hotels_paris_rome_raw.csv`
+The project follows a structured workflow:
 
-### Processed dataset
-`data/processed/hotels_paris_rome_base_clean.csv`
+### 1. Hotel Data Extraction (RapidAPI)
+- Retrieve city and hotel data
+- Normalize JSON responses into DataFrames
+- Clean and standardize fields
 
-This dataset serves as a **base layer for further analysis and enrichment**.
+### 2. Airbnb Data Preparation
+- Clean and structure Airbnb dataset
+- Engineer pricing and satisfaction variables
+
+### 3. Location Feature Engineering
+- Compute:
+  - distance to key landmarks
+  - number of nearby points of interest
+
+### 4. Geoapify Enrichment
+- Group listings into geographic zones (rounded coordinates)
+- Query Geoapify API for nearby tourism POIs
+- Create tourism density features:
+  - number of POIs
+  - attractions / sights / heritage
+  - composite density score
+
+### 5. Analysis
+- Correlation analysis (pricing and satisfaction)
+- Segmentation (density bands)
+- Visualization (scatter plots, comparisons)
+
+### 6. Hotel Extension
+- Apply tourism density features to hotel locations
+- Rank hotels based on exposure to tourism demand
 
 ---
 
-## 🚀 How to Run the Project
+## Outputs
 
-### 1. Clone the repository
+Processed datasets generated:
 
-```bash
-git clone https://github.com/JohannesVidal/hotel_pricing_project.git
-cd hotel_pricing_project
-```
+- `airbnb_paris_geoapify_enriched.csv`
+- `geoapify_paris_density_features.csv`
+- `hotel_paris_geoapify_ranking.csv`
 
-### 2. Create virtual environment (recommended)
+These datasets combine internal and external data into a unified analytical layer.
 
-```bash
-python -m venv venv
-source venv/bin/activate   # Mac/Linux
-venv\Scripts\activate      # Windows
-```
+---
+
+## How to Run the Project
+
+### 1. Clone repository
+
+    git clone https://github.com/JohannesVidal/hotel_pricing_project.git
+    cd hotel_pricing_project
+
+### 2. Create environment
+
+    python -m venv venv
+    source venv/bin/activate   # Mac/Linux
+    venv\Scripts\activate      # Windows
 
 ### 3. Install dependencies
 
-```bash
-pip install -r requirements.txt
-```
+    pip install -r requirements.txt
 
 ### 4. Configure environment variables
 
-Create a `.env` file in the root directory:
+Create a `.env` file in the root directory with your own API keys:
 
-```text
-.env
-```
-
-Add the following:
-
-```env
-RAPIDAPI_KEY=your_rapidapi_key_here
-GOOGLE_HOTEL_RAPIDAPI_HOST=google-hotel-data-scaper.p.rapidapi.com
-
-OPENWEATHER_API_KEY=your_openweather_key_here
-TICKETMASTER_API_KEY=your_ticketmaster_key_here
-```
+    RAPIDAPI_KEY=your_rapidapi_key_here
+    GOOGLE_HOTEL_RAPIDAPI_HOST=google-hotel-data-scaper.p.rapidapi.com
+    GEOAPIFY_API_KEY=your_geoapify_key_here
+    OPENWEATHER_API_KEY=your_openweather_key_here
+    TICKETMASTER_API_KEY=your_ticketmaster_key_here
 
 ---
 
-## 🔑 API Setup
+## API Setup
 
-To run this project, you need API keys from the following providers:
+### RapidAPI - Hotel Data
 
-### RapidAPI (Hotel Data)
 1. Create an account on RapidAPI
 2. Subscribe to the Google Hotel Data Scraper API
 3. Copy your `x-rapidapi-key`
+4. Add it to your `.env` file as `RAPIDAPI_KEY`
 
-### OpenWeather (optional)
-1. Create an account
+This key is required to retrieve hotel data.
+
+### Geoapify - Tourism Data
+
+1. Create an account on Geoapify
 2. Generate an API key
+3. Add it to your `.env` file as `GEOAPIFY_API_KEY`
 
-### Ticketmaster (optional)
-1. Create a developer account
-2. Generate an API key
+This API is used to extract **points of interest around each location**, which are then transformed into tourism density features.
 
----
+### Optional APIs
 
-## 🔗 Data Enrichment Roadmap
+- OpenWeather -> weather enrichment
+- Ticketmaster -> events enrichment
 
-- Integrate hotel data with Airbnb datasets
-- Build geospatial analysis (heatmaps, clustering)
-- Enrich dataset with:
-  - Event data (Ticketmaster API)
-  - Weather data (OpenWeather API)
-- Enable cross-platform comparison (Airbnb vs hotels)
+These are not required for the core analysis.
 
 ---
 
-## ⚠️ Limitations
+## Important Notes
 
-- API rate limits apply (especially free tiers)
-- Data completeness depends on API availability
-- Some endpoints may return limited results depending on quota
+- The Geoapify API is limited (max 20 POIs per request)
+- Tourism variables should be interpreted as:
 
----
+  > proxies for tourism intensity, not exact counts
 
-## 🔒 Security
-
-- `.env` file is not tracked by Git
-- API keys are never exposed
-- Sensitive information is excluded from the repository
+- API rate limits may affect reproducibility if rerunning the notebook
+- Due to API limitations, the final analysis is focused on **Paris only**
 
 ---
 
-## 🎯 Project Context
+## Limitations
 
-This repository focuses on **data extraction and preparation**.
-
-The full analytical workflow includes:
-- External datasets (Airbnb data)
-- Exploratory data analysis
-- Visualization (e.g., Power BI dashboards)
+- Pricing is influenced by many factors not included in the dataset:
+  - property type
+  - amenities
+  - host behavior
+- Tourism density is an approximation due to API constraints
+- The project is designed as an analytical case study, not as a production data pipeline
 
 ---
 
-## 👤 Author
+## Project Context
 
-**Johannes Vidal**
+This repository focuses on:
+- data extraction
+- feature engineering
+- analytical validation
+
+The main value lies in combining:
+- internal listing data
+- external geospatial signals
+
+to build a more realistic view of **urban pricing dynamics**.
+
+The notebook contains the full step-by-step analysis, so this README is intentionally kept concise.
+
+---
+
+## Author
+
+Johannes Vidal
