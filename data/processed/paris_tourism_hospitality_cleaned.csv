@@ -1,0 +1,5 @@
+country,city,year,month,number_of_tourists,purpose_of_visit,average_length_of_stay,tourist_spending_usd,hotel_occupancy_rate,number_of_hotels,hotel_rating,average_room_price_usd,tourism_revenue_usd,employment_in_tourism,contribution_to_gdp_percent,number_of_flights,airport_passenger_traffic,transport_infrastructure_quality,eco_tourism_revenue_usd,carbon_footprint_kg,waste_management_rating,tourist_satisfaction_score,number_of_online_reviews,month_name,hotel_rating_num
+France,Paris,2024,8,71959,Leisure,8.9,2681.73,74.6,283,1-star,201.93,192974.61,39766,4.2,4243,643128,4.6,12779.37,14504499.71,3.2,8.5,7654,August,1.0
+France,Paris,2022,1,113936,Educational,7.8,715.24,41.9,136,1-star,372.35,81491.58,12788,16.2,3211,782176,9.6,19099.76,27492820.99,3.7,6.7,5430,January,1.0
+France,Paris,2020,9,73185,Leisure,13.7,1415.63,43.3,71,5-star,265.67,103602.88,32374,11.3,2839,168094,1.6,21972.05,9487862.14,4.4,9.0,2482,September,5.0
+France,Paris,2022,5,152127,Religious,4.0,2178.5,50.5,157,2-star,327.48,331408.67,25900,19.9,1508,201770,8.6,33638.45,73148482.08,4.1,9.9,4811,May,2.0
