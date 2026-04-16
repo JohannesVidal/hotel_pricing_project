@@ -10,3 +10,9 @@ __pycache__/
 
 # Data folders
 data/raw/
+
+notebooks/*.html
+data/processed/airbnb_paris_combined_poi_features.csv
+data/processed/hotels_paris_poi_features.csv
+data/processed/hotels_paris_poi_ranking.csv
+data/processed/tourism_hospitality_cleaned.csv
